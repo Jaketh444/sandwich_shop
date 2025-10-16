@@ -13,13 +13,33 @@ class App extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(title: const Text('Sandwich Counter')),
         body: const Center(
-          child: OrderItemDisplay(5, 'Footlong'),
+          child: OrderItemsGrid(),
         ),
       ),
     );
   }
 }
+class OrderItemsGrid extends StatelessWidget {
+  const OrderItemsGrid({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: GridView.count(
+        crossAxisCount: 3,
+        shrinkWrap: true,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
+        children: const [
+          OrderItemDisplay(5, 'Footlong'),
+          OrderItemDisplay(2, 'Six Inch'),
+          OrderItemDisplay(3, 'Wrap'),
+        ],
+      ),
+    );
+  }
+}
 class OrderItemDisplay extends StatelessWidget {
   final String itemType;
   final int quantity;
@@ -28,7 +48,30 @@ class OrderItemDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('$quantity $itemType sandwich(es): ${'🥪' * quantity}');
+    return Container(
+      width: 350,
+      height: 60,
+      color: Colors.amberAccent,
+      alignment: Alignment.center,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: Text('$quantity $itemType sandwich(es): ${'🥪' * quantity}'),
+    );
+  }
+}
+
+class OrderItemsList extends StatelessWidget {
+  const OrderItemsList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        OrderItemDisplay(5, 'Footlong'),
+        OrderItemDisplay(2, 'Six Inch'),
+        OrderItemDisplay(3, 'Wrap'),
+      ],
+    );
   }
 }
 
