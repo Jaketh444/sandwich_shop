@@ -99,13 +99,18 @@ class _OrderScreenState extends State<OrderScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
+                StyledButton(
                   onPressed: _increaseQuantity,
-                  child: const Text('Add'),
+                  icon: Icons.add,
+                  label: 'Add',
+                  backgroundColor: Colors.green,
                 ),
-                ElevatedButton(
+                const SizedBox(width: 12),
+                StyledButton(
                   onPressed: _decreaseQuantity,
-                  child: const Text('Remove'),
+                  icon: Icons.remove,
+                  label: 'Remove',
+                  backgroundColor: Colors.red,
                 ),
               ],
             ),
@@ -135,6 +140,41 @@ class OrderItemDisplay extends StatelessWidget {
         '$quantity $itemType sandwich(es): ${'🥪' * quantity}'
         '${note != null && note!.isNotEmpty ? '\nNote: $note' : ''}',
         textAlign: TextAlign.center,
+      ),
+    );
+  }
+}
+
+/// A small reusable button with the common styling used for Add/Remove actions.
+class StyledButton extends StatelessWidget {
+  final VoidCallback? onPressed;
+  final IconData icon;
+  final String label;
+  final Color backgroundColor;
+  final Color foregroundColor;
+  final EdgeInsetsGeometry? padding;
+
+  const StyledButton({
+    super.key,
+    required this.onPressed,
+    required this.icon,
+    required this.label,
+    this.backgroundColor = Colors.blue,
+    this.foregroundColor = Colors.white,
+    this.padding,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon, size: 20),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: backgroundColor,
+        foregroundColor: foregroundColor,
+        textStyle: const TextStyle(fontWeight: FontWeight.bold),
+        padding: padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
     );
   }
