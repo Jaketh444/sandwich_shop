@@ -12,9 +12,29 @@ class App extends StatelessWidget {
       title: 'Sandwich Shop App',
       home: Scaffold(
         appBar: AppBar(title: const Text('Sandwich Counter')),
-        body: const Center(
-          child: OrderItemsGrid(),
+        // The bit that you need to update starts from here
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const OrderItemDisplay(5, 'Footlong'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => print('Add button pressed!'),
+                    child: const Text('Add'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => print('Remove button pressed!'),
+                    child: const Text('Remove'),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
+        // The bit that you need to update ends here
       ),
     );
   }
@@ -33,7 +53,7 @@ class OrderItemsGrid extends StatelessWidget {
         crossAxisSpacing: 16,
         children: const [
           OrderItemDisplay(5, 'Footlong'),
-          OrderItemDisplay(2, 'Six Inch'),
+          OrderItemDisplay(2, 'Six Inch'),          
           OrderItemDisplay(3, 'Wrap'),
         ],
       ),
