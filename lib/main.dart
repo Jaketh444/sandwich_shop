@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 void main() {
   runApp(const App());
 }
@@ -29,7 +30,7 @@ class OrderItemsGrid extends StatelessWidget {
         crossAxisSpacing: 16,
         children: const [
           OrderItemDisplay(5, 'Footlong'),
-          OrderItemDisplay(2, 'Six Inch'),          
+          OrderItemDisplay(2, 'Six Inch'),
           OrderItemDisplay(3, 'Wrap'),
         ],
       ),
@@ -50,66 +51,91 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   int _quantity = 0;
-  void _increaseQuantity() {
-  if (_quantity < widget.maxQuantity) {
-    setState(() => _quantity++);
-  }
-}
+  String _note = ''; // user-entered note for the current order
 
-void _decreaseQuantity() {
-  if (_quantity > 0) {
-    setState(() => _quantity--);
+  void _increaseQuantity() {
+    if (_quantity < widget.maxQuantity) {
+      setState(() => _quantity++);
+    }
   }
-}
+
+  void _decreaseQuantity() {
+    if (_quantity > 0) {
+      setState(() => _quantity--);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: const Text('Sandwich Counter'),
-    ),
-    body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          OrderItemDisplay(
-            _quantity,
-            'Footlong',
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-              onPressed: _increaseQuantity,
-              child: const Text('Add'),
-              ),
-              ElevatedButton(
-              onPressed: _decreaseQuantity,
-              child: const Text('Remove'),
-              ),
-            ],
-          ),
-        ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Sandwich Counter'),
       ),
-    ),
-  );
-}
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            OrderItemDisplay(
+              _quantity,
+              'Footlong',
+              note: _note,
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+              child: TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Special requests',
+                  hintText: 'e.g., no onions, extra pickles',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _note = value;
+                  });
+                },
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: _increaseQuantity,
+                  child: const Text('Add'),
+                ),
+                ElevatedButton(
+                  onPressed: _decreaseQuantity,
+                  child: const Text('Remove'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class OrderItemDisplay extends StatelessWidget {
   final String itemType;
   final int quantity;
+  final String? note;
 
-  const OrderItemDisplay(this.quantity, this.itemType, {super.key});
+  const OrderItemDisplay(this.quantity, this.itemType, {this.note, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 350,
-      height: 60,
+      height: 80,
       color: Colors.amberAccent,
       alignment: Alignment.center,
       margin: const EdgeInsets.symmetric(vertical: 8),
-      child: Text('$quantity $itemType sandwich(es): ${'🥪' * quantity}'),
+      child: Text(
+        '$quantity $itemType sandwich(es): ${'🥪' * quantity}'
+        '${note != null && note!.isNotEmpty ? '\nNote: $note' : ''}',
+        textAlign: TextAlign.center,
+      ),
     );
   }
 }
