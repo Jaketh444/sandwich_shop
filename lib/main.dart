@@ -1,5 +1,19 @@
 import 'package:flutter/material.dart';
 
+enum SandwichSize {
+  sixInch,
+  footlong;
+
+  String get displayName {
+    switch (this) {
+      case SandwichSize.sixInch:
+        return 'Six Inch';
+      case SandwichSize.footlong:
+        return 'Footlong';
+    }
+  }
+}
+
 void main() {
   runApp(const App());
 }
@@ -52,6 +66,15 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen> {
   int _quantity = 0;
   String _note = ''; // user-entered note for the current order
+  SandwichSize _currentSize = SandwichSize.footlong;
+
+  void _toggleSize() {
+    setState(() {
+      _currentSize = _currentSize == SandwichSize.footlong
+          ? SandwichSize.sixInch
+          : SandwichSize.footlong;
+    });
+  }
 
   void _increaseQuantity() {
     if (_quantity < widget.maxQuantity) {
@@ -75,9 +98,16 @@ class _OrderScreenState extends State<OrderScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            StyledButton(
+              onPressed: _toggleSize,
+              icon: Icons.swap_horiz,
+              label: 'Switch to ${_currentSize == SandwichSize.footlong ? 'Six Inch' : 'Footlong'}',
+              backgroundColor: Colors.blue,
+            ),
+            const SizedBox(height: 8),
             OrderItemDisplay(
               _quantity,
-              'Footlong',
+              _currentSize.displayName,
               note: _note,
             ),
             Padding(
