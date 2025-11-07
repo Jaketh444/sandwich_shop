@@ -112,8 +112,8 @@ class _OrderScreenState extends State<OrderScreen> {
                   });
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                    (states) => states.contains(MaterialState.selected)
+                  backgroundColor: WidgetStateProperty.resolveWith<Color?>(
+                    (states) => states.contains(WidgetState.selected)
                         ? Colors.amberAccent
                         : null,
                   ),
