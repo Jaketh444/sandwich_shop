@@ -68,14 +68,6 @@ class _OrderScreenState extends State<OrderScreen> {
   String _note = ''; // user-entered note for the current order
   SandwichSize _currentSize = SandwichSize.footlong;
 
-  void _toggleSize() {
-    setState(() {
-      _currentSize = _currentSize == SandwichSize.footlong
-          ? SandwichSize.sixInch
-          : SandwichSize.footlong;
-    });
-  }
-
   void _increaseQuantity() {
     if (_quantity < widget.maxQuantity) {
       setState(() => _quantity++);
@@ -98,14 +90,37 @@ class _OrderScreenState extends State<OrderScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            StyledButton(
-              onPressed: _toggleSize,
-              icon: Icons.swap_horiz,
-              label:
-                  'Switch to ${_currentSize == SandwichSize.footlong ? 'Six Inch' : 'Footlong'}',
-              backgroundColor: Colors.blue,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: SegmentedButton<SandwichSize>(
+                segments: const [
+                  ButtonSegment<SandwichSize>(
+                    value: SandwichSize.sixInch,
+                    label: Text('Six Inch'),
+                    icon: Icon(Icons.lunch_dining),
+                  ),
+                  ButtonSegment<SandwichSize>(
+                    value: SandwichSize.footlong,
+                    label: Text('Footlong'),
+                    icon: Icon(Icons.lunch_dining),
+                  ),
+                ],
+                selected: {_currentSize},
+                onSelectionChanged: (Set<SandwichSize> selected) {
+                  setState(() {
+                    _currentSize = selected.first;
+                  });
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                    (states) => states.contains(MaterialState.selected)
+                        ? Colors.amberAccent
+                        : null,
+                  ),
+                ),
+              ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             OrderItemDisplay(
               _quantity,
               _currentSize.displayName,
