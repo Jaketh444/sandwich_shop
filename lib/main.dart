@@ -100,7 +100,8 @@ class _OrderScreenState extends State<OrderScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 StyledButton(
-                  onPressed: _quantity < widget.maxQuantity ? _increaseQuantity : null,
+                  onPressed:
+                      _quantity < widget.maxQuantity ? _increaseQuantity : null,
                   icon: Icons.add,
                   label: 'Add',
                   backgroundColor: Colors.green,
@@ -177,7 +178,8 @@ class StyledButton extends StatelessWidget {
         disabledBackgroundColor: backgroundColor.withOpacity(0.45),
         disabledForegroundColor: foregroundColor.withOpacity(0.65),
         textStyle: const TextStyle(fontWeight: FontWeight.bold),
-        padding: padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding:
+            padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
     );
   }
