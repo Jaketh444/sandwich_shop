@@ -101,7 +101,8 @@ class _OrderScreenState extends State<OrderScreen> {
             StyledButton(
               onPressed: _toggleSize,
               icon: Icons.swap_horiz,
-              label: 'Switch to ${_currentSize == SandwichSize.footlong ? 'Six Inch' : 'Footlong'}',
+              label:
+                  'Switch to ${_currentSize == SandwichSize.footlong ? 'Six Inch' : 'Footlong'}',
               backgroundColor: Colors.blue,
             ),
             const SizedBox(height: 8),
