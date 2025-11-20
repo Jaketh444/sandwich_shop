@@ -27,7 +27,8 @@ class PricingRepository {
   /// Helper that returns a formatted string with a leading pound sign,
   /// e.g. "£21".
   String formattedTotal({required bool isFootlong, required int quantity}) {
-    final int pounds = totalPricePounds(isFootlong: isFootlong, quantity: quantity);
+    final int pounds =
+        totalPricePounds(isFootlong: isFootlong, quantity: quantity);
     return '£$pounds';
   }
 }
