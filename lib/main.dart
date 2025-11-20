@@ -71,6 +71,7 @@ class _OrderScreenState extends State<OrderScreen> {
   late final OrderRepository _orderRepository;
   final TextEditingController _notesController = TextEditingController();
   bool _isFootlong = true;
+  bool _isToasted = false;
   BreadType _selectedBreadType = BreadType.white;
 
   @override
@@ -154,6 +155,7 @@ class _OrderScreenState extends State<OrderScreen> {
               itemType: sandwichType,
               breadType: _selectedBreadType,
               orderNote: noteForDisplay,
+              isToasted: _isToasted,
             ),
             const SizedBox(height: 20),
             Row(
@@ -165,6 +167,20 @@ class _OrderScreenState extends State<OrderScreen> {
                   onChanged: _onSandwichTypeChanged,
                 ),
                 const Text('footlong', style: normalText),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('untoasted', style: normalText),
+                Switch(
+                  value: _isToasted,
+                  onChanged: (value) {
+                    setState(() => _isToasted = value);
+                  },
+                ),
+                const Text('toasted', style: normalText),
               ],
             ),
             const SizedBox(height: 10),
@@ -216,6 +232,7 @@ class OrderItemDisplay extends StatelessWidget {
   final String itemType;
   final BreadType? breadType;
   final String? orderNote;
+  final bool isToasted;
 
   const OrderItemDisplay({
     super.key,
@@ -223,21 +240,34 @@ class OrderItemDisplay extends StatelessWidget {
     required this.itemType,
     this.breadType,
     this.orderNote,
+    this.isToasted = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final String breadName = breadType?.name ?? 'white';
+    final String emojis =
+        quantity > 0 ? List.generate(quantity, (_) => '🥪').join() : '';
+    final String toastStatus = isToasted ? 'toasted' : 'untoasted';
     return Container(
       width: 350,
-      height: 80,
+      // height left flexible to accommodate two lines
       color: Colors.amberAccent,
       alignment: Alignment.center,
       margin: const EdgeInsets.symmetric(vertical: 8),
-      child: Text(
-        '$quantity $itemType sandwich(es): ${'🥪' * quantity}'
-        '${orderNote != null && orderNote!.isNotEmpty ? '\nNote: $orderNote' : ''}'
-        '${breadType != null ? '\nBread: ${breadType!.name}' : ''}',
-        textAlign: TextAlign.center,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '$quantity $breadName $itemType sandwich(es): ${emojis}',
+            textAlign: TextAlign.center,
+          ),
+          // show toast status on its own line
+          Text(toastStatus,
+              style: const TextStyle(fontStyle: FontStyle.italic)),
+          if (orderNote != null && orderNote!.isNotEmpty)
+            Text('Note: ${orderNote!}'),
+        ],
       ),
     );
   }
