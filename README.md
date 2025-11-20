@@ -1,76 +1,133 @@
-# Sandwich Shop
+## Sandwich Shop App
 
-This is a simple Flutter app that allows users to order sandwiches.
-The app is built using Flutter and Dart, and it is designed primarily to be run in a web
-browser.
+A small Flutter demo app for building and previewing sandwich orders. It demonstrates a simple ordering UI with quantity controls, special-request notes, bread selection, and sandwich size selection — useful as a learning/demo project or a tiny starting point for a point-of-sale UI.
 
-## Install the essential tools
+Key features
+- Add / Remove sandwich quantity with max/min enforcement (repository enforces business rules).
+- Enter special requests for the current sandwich order (notes).
+- Choose bread type (White / Wheat / Wholemeal).
+- Choose sandwich size (Six Inch / Footlong).
+- Reusable UI component: `StyledButton` for consistent action buttons.
+- `OrderRepository` holds quantity/business rules (single source of truth for quantity).
 
-1. **Terminal**:
+## Installation & Setup
 
-    - **macOS** – use the built-in Terminal app by pressing **⌘ + Space**, typing **Terminal**, and pressing **Return**.
-    - **Windows** – open the start menu using the **Windows** key. Then enter **cmd** to open the **Command Prompt**. Alternatively, you can use **Windows PowerShell** or **Windows Terminal**.
+### Prerequisites
+- Flutter SDK (stable channel) installed and configured: https://flutter.dev/docs/get-started/install
+- Git for cloning the repository
+- Android Studio / Xcode or an emulator/simulator (optional, for running on devices)
+- Platform: Windows/macOS/Linux (development tested on Windows)
 
-2. **Git** – verify that you have `git` installed by entering `git --version`, in the terminal.
-    If this is missing, download the installer from [Git's official site](https://git-scm.com/downloads?utm_source=chatgpt.com).
+### Clone the repository
+Open PowerShell and run:
 
-3. **Package managers**:
-
-    - **Homebrew** (macOS) – verify that you have `brew` installed with `brew --version`; if missing, follow the instructions on the [Homebrew installation page](https://brew.sh/).
-    - **Chocolatey** (Windows) – verify that you have `choco` installed with `choco --version`; if missing, follow the instructions on the [Chocolatey installation page](https://chocolatey.org/install).
-
-4. **Flutter SDK** – verify that you have `flutter` installed and it is working with `flutter doctor`; if missing, install it using your package manager:
-
-    - **macOS**: `brew install --cask flutter`
-    - **Windows**: `choco install flutter`
-
-5. **Visual Studio Code** – verify that you have `code` installed with `code --version`; if missing, use your package manager to install it:
-
-    - **macOS**: `brew install --cask visual-studio-code`
-    - **Windows**: `choco install vscode`
-
-## Get the code
-
-### If this is your first time working on this project
-
-Enter the following commands in your terminal to clone the repository and
-open it in Visual Studio Code.
-You may want to change directory (`cd`) to the directory where you want to clone the
-repository first.
-
-```bash
-git clone --branch 1 https://github.com/manighahrmani/sandwich_shop
+```powershell
+git clone https://github.com/Jaketh444/sandwich_shop.git
 cd sandwich_shop
-code .
 ```
 
-### If you have already cloned the repository
+### Install dependencies
 
-Enter the following commands in your terminal to switch to the correct branch.
-Remember to `cd` to the directory where you cloned the repository first.
-
-```bash
-git fetch origin
-git checkout 1
-```
-
-## Run the app
-
-Open the integrated terminal in Visual Studio Code by first opening the Command
-Palette with **⌘ + Shift + P** (macOS) or **Ctrl + Shift + P** (Windows) and
-typing **Terminal: Create New Terminal** then pressing **Enter**.
-
-In the terminal, run the following commands to install the dependencies and run
-the app in your web browser:
-
-```bash
+```powershell
 flutter pub get
-flutter run
 ```
 
-## Get support
+### Static analysis (recommended)
 
-Use [the dedicated Discord channel](https://discord.com/channels/760155974467059762/1370633732779933806)
-to ask your questions and get help from the community.
-Please provide as much context as possible, including the error messages you are seeing and
-screenshots (you can open Discord in your web browser).
+```powershell
+flutter analyze
+```
+
+### Run the app
+
+```powershell
+flutter run
+# To target a specific device: flutter run -d <device-id>
+```
+
+Use hot reload during development by saving files while the app is running.
+
+## Usage
+
+What the app does
+- The app starts at `OrderScreen` (`lib/main.dart`).
+- The UI shows an `OrderItemDisplay` summarizing the current order quantity and details.
+- Use the Add and Remove buttons to change quantity. Buttons automatically disable at limits (0 and max).
+- Type special requests into the notes `TextField` before pressing Add/Remove; the current note will appear in the item display.
+- Choose bread from the `DropdownMenu` (White / Wheat / Wholemeal).
+- Choose sandwich size via the size control (switch/segmented control).
+
+Main user flows
+1. Choose sandwich size (Six Inch / Footlong).
+2. Optional: choose bread type from the dropdown.
+3. Type special requests in the "Add a note" field (example: "no onions").
+4. Tap Add to increase the quantity (Add disables at configured max).
+5. Tap Remove to decrease the quantity (Remove disables at 0).
+
+### Running tests
+
+Run widget/unit tests with:
+
+```powershell
+flutter test --reporter expanded
+```
+
+If tests fail after UI changes, update the tests or the UI to match the intended behavior and re-run.
+
+### Screenshots / GIFs
+
+Add screenshots to `assets/screenshots/` and embed them in this file, e.g.:
+
+```markdown
+![Order screen](assets/screenshots/order_screen.png)
+```
+
+There are no screenshots included by default — add them for better documentation.
+
+## Project structure & technologies used
+
+High-level layout
+- `android/`, `ios/`, `linux/`, `macos/`, `windows/`, `web/` — platform folders generated by Flutter.
+- `lib/` — app source
+	- `main.dart` — app entry and main UI widgets (`OrderScreen`, `OrderItemDisplay`, `StyledButton`).
+	- `views/` — view helpers and styles (e.g. `app_styles.dart`).
+	- `repositories/` — `order_repository.dart` (business logic and quantity rules).
+- `test/` — widget and unit tests (e.g. `test/views/widget_test.dart`).
+- `pubspec.yaml` — dependencies and assets.
+
+Key files
+- `lib/main.dart` — primary UI, `OrderScreen` wiring, `OrderItemDisplay` view, `StyledButton` component.
+- `lib/repositories/order_repository.dart` — encapsulates quantity, maxQuantity and increment/decrement logic.
+
+Dependencies
+- Flutter (Material)
+- `flutter_test` for tests
+
+Development tools
+- Flutter CLI, Android Studio / VS Code (with Flutter plugin), and an emulator or device for testing.
+
+## Known issues & limitations
+
+Current limitations
+- Single-order model: `OrderRepository` tracks a single quantity; there's no cart/list of items.
+- Persistence: orders are not persisted locally or remotely.
+- Accessibility: basic widgets used — consider adding semantic labels, tooltips, and a11y improvements.
+- Tests: widget tests may need updates after UI refactors.
+
+Planned improvements
+- Add an `Order` model and a cart/list of items.
+- Persist orders locally (shared_preferences/SQLite) or integrate a backend API.
+- Add pricing, totals, and checkout flow.
+- Improve UI polish and accessibility.
+
+Contributing
+- Fork the repo → create a branch → make changes → open a PR.
+- Keep PRs focused and add tests where appropriate.
+
+## Contact
+
+- Repository owner: Jaketh444
+- GitHub: https://github.com/Jaketh444/sandwich_shop
+
+If you'd like, I can also add a simple placeholder screenshot and commit this README for you.
+
