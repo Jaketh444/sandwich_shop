@@ -76,7 +76,8 @@ void main() {
       expect(find.text('0 white footlong sandwich(es): '), findsOneWidget);
     });
 
-    testWidgets('does not increment above maxQuantity', (WidgetTester tester) async {
+    testWidgets('does not increment above maxQuantity',
+        (WidgetTester tester) async {
       await tester.pumpWidget(const App());
       await tester.pumpAndSettle();
 
@@ -88,7 +89,8 @@ void main() {
         await tester.pumpAndSettle();
       }
 
-      expect(find.text('5 white footlong sandwich(es): 🥪🥪🥪🥪🥪'), findsOneWidget);
+      expect(find.text('5 white footlong sandwich(es): 🥪🥪🥪🥪🥪'),
+          findsOneWidget);
     });
 
     testWidgets('updates the note when typing into the TextField',
@@ -107,7 +109,8 @@ void main() {
   });
 
   group('OrderScreen - Controls', () {
-    testWidgets('changes bread type with DropdownMenu', (WidgetTester tester) async {
+    testWidgets('changes bread type with DropdownMenu',
+        (WidgetTester tester) async {
       await tester.pumpWidget(const App());
       await tester.pumpAndSettle();
 
@@ -129,14 +132,15 @@ void main() {
       expect(find.text('0 wheat footlong sandwich(es): '), findsOneWidget);
     });
 
-    testWidgets('toggles sandwich size using the Switch', (WidgetTester tester) async {
+    testWidgets('toggles sandwich size using the Switch',
+        (WidgetTester tester) async {
       await tester.pumpWidget(const App());
       await tester.pumpAndSettle();
 
       // Labels sit next to the Switch; initial is footlong
       expect(find.text('0 white footlong sandwich(es): '), findsOneWidget);
 
-      final Finder switchFinder = find.byType(Switch);
+      final Finder switchFinder = find.byKey(const Key('size_switch'));
       expect(switchFinder, findsOneWidget);
 
       await tester.tap(switchFinder);
@@ -144,6 +148,30 @@ void main() {
 
       // After toggling, size becomes six-inch
       expect(find.text('0 white six-inch sandwich(es): '), findsOneWidget);
+    });
+  });
+
+  group('OrderScreen - Toast Switch', () {
+    testWidgets('toggles toast state and updates display',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(const App());
+      await tester.pumpAndSettle();
+
+      // Find the toast status Text by key to avoid colliding with label text
+      final Finder statusFinder = find.byKey(const Key('toast_status'));
+      expect(statusFinder, findsOneWidget);
+      final Text initialStatus = tester.widget<Text>(statusFinder);
+      expect(initialStatus.data, 'untoasted');
+
+      final Finder toastSwitch = find.byKey(const Key('toast_switch'));
+      expect(toastSwitch, findsOneWidget);
+
+      await tester.tap(toastSwitch);
+      await tester.pumpAndSettle();
+
+      // After toggling, toast status should update to 'toasted'
+      final Text toggledStatus = tester.widget<Text>(statusFinder);
+      expect(toggledStatus.data, 'toasted');
     });
   });
 }

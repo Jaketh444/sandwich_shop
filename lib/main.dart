@@ -163,6 +163,7 @@ class _OrderScreenState extends State<OrderScreen> {
               children: [
                 const Text('six-inch', style: normalText),
                 Switch(
+                  key: const Key('size_switch'),
                   value: _isFootlong,
                   onChanged: _onSandwichTypeChanged,
                 ),
@@ -175,6 +176,7 @@ class _OrderScreenState extends State<OrderScreen> {
               children: [
                 const Text('untoasted', style: normalText),
                 Switch(
+                  key: const Key('toast_switch'),
                   value: _isToasted,
                   onChanged: (value) {
                     setState(() => _isToasted = value);
@@ -263,8 +265,11 @@ class OrderItemDisplay extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           // show toast status on its own line
-          Text(toastStatus,
-              style: const TextStyle(fontStyle: FontStyle.italic)),
+          Text(
+            toastStatus,
+            key: const Key('toast_status'),
+            style: const TextStyle(fontStyle: FontStyle.italic),
+          ),
           if (orderNote != null && orderNote!.isNotEmpty)
             Text('Note: ${orderNote!}'),
         ],
