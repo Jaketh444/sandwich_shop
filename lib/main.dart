@@ -4,7 +4,6 @@ import 'repositories/order_repository.dart';
 
 enum BreadType { white, wheat, wholemeal }
 
-
 enum SandwichSize {
   sixInch,
   footlong;
@@ -48,9 +47,9 @@ class OrderItemsGrid extends StatelessWidget {
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
         children: const [
-          OrderItemDisplay(5, 'Footlong'),
-          OrderItemDisplay(2, 'Six Inch'),
-          OrderItemDisplay(3, 'Wrap'),
+          OrderItemDisplay(quantity: 5, itemType: 'Footlong'),
+          OrderItemDisplay(quantity: 2, itemType: 'Six Inch'),
+          OrderItemDisplay(quantity: 3, itemType: 'Wrap'),
         ],
       ),
     );
@@ -213,11 +212,18 @@ class _OrderScreenState extends State<OrderScreen> {
 }
 
 class OrderItemDisplay extends StatelessWidget {
-  final String itemType;
   final int quantity;
-  final String? note;
+  final String itemType;
+  final BreadType? breadType;
+  final String? orderNote;
 
-  const OrderItemDisplay(this.quantity, this.itemType, {this.note, super.key});
+  const OrderItemDisplay({
+    super.key,
+    required this.quantity,
+    required this.itemType,
+    this.breadType,
+    this.orderNote,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +235,8 @@ class OrderItemDisplay extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: Text(
         '$quantity $itemType sandwich(es): ${'🥪' * quantity}'
-        '${note != null && note!.isNotEmpty ? '\nNote: $note' : ''}',
+        '${orderNote != null && orderNote!.isNotEmpty ? '\nNote: $orderNote' : ''}'
+        '${breadType != null ? '\nBread: ${breadType!.name}' : ''}',
         textAlign: TextAlign.center,
       ),
     );
@@ -283,9 +290,9 @@ class OrderItemsList extends StatelessWidget {
     return const Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        OrderItemDisplay(5, 'Footlong'),
-        OrderItemDisplay(2, 'Six Inch'),
-        OrderItemDisplay(3, 'Wrap'),
+        OrderItemDisplay(quantity: 5, itemType: 'Footlong'),
+        OrderItemDisplay(quantity: 2, itemType: 'Six Inch'),
+        OrderItemDisplay(quantity: 3, itemType: 'Wrap'),
       ],
     );
   }
