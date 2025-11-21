@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'views/app_styles.dart';
 import 'repositories/order_repository.dart';
+import 'repositories/pricing_repository.dart';
 
 enum BreadType { white, wheat, wholemeal }
 
@@ -222,6 +223,16 @@ class _OrderScreenState extends State<OrderScreen> {
                 ),
               ],
             ),
+            const SizedBox(height: 12),
+            // Show a live total using PricingRepository
+            Builder(builder: (context) {
+              final pricing = const PricingRepository();
+              final total = pricing.formattedTotal(
+                isFootlong: _isFootlong,
+                quantity: _orderRepository.quantity,
+              );
+              return Text('Total: $total', key: const Key('total_price'));
+            }),
           ],
         ),
       ),
