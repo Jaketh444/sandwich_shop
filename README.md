@@ -1,133 +1,94 @@
 ## Sandwich Shop App
 
-A small Flutter demo app for building and previewing sandwich orders. It demonstrates a simple ordering UI with quantity controls, special-request notes, bread selection, and sandwich size selection — useful as a learning/demo project or a tiny starting point for a point-of-sale UI.
+A small Flutter demo app for building and previewing sandwich orders. The app demonstrates a basic ordering UI with quantity controls, special-request notes, bread selection, sandwich size selection, and simple pricing logic. It's intended as a learning/demo project or a tiny starting point for a point-of-sale UI.
 
 Key features
-- Add / Remove sandwich quantity with max/min enforcement (repository enforces business rules).
-- Enter special requests for the current sandwich order (notes).
-- Choose bread type (White / Wheat / Wholemeal).
-- Choose sandwich size (Six Inch / Footlong).
-- Reusable UI component: `StyledButton` for consistent action buttons.
-- `OrderRepository` holds quantity/business rules (single source of truth for quantity).
+- Add / Remove sandwich quantity with max/min enforcement (business rules enforced by `OrderRepository`).
+- Enter special requests for the current sandwich order (notes) via a `TextField`.
+- Choose bread type (white / wheat / wholemeal) using a `DropdownMenu`.
+- Choose sandwich size (six-inch / footlong) using a Switch control.
+- Toasted toggle (shows a small status line in the item display).
+- Reusable UI: `StyledButton` for consistent Add/Remove visuals.
+- `OrderRepository` as the single source of truth for quantity.
+- `PricingRepository` provides pricing (six-inch = £7, footlong = £11) and helpers to compute totals.
 
-## Installation & Setup
+## Installation & setup
 
-### Prerequisites
+Prerequisites
 - Flutter SDK (stable channel) installed and configured: https://flutter.dev/docs/get-started/install
 - Git for cloning the repository
-- Android Studio / Xcode or an emulator/simulator (optional, for running on devices)
-- Platform: Windows/macOS/Linux (development tested on Windows)
+- An emulator or device to run the app (optional for tests)
 
-### Clone the repository
-Open PowerShell and run:
-
+Clone and install
 ```powershell
 git clone https://github.com/Jaketh444/sandwich_shop.git
 cd sandwich_shop
-```
-
-### Install dependencies
-
-```powershell
 flutter pub get
 ```
 
-### Static analysis (recommended)
-
-```powershell
-flutter analyze
-```
-
-### Run the app
-
+Run the app
 ```powershell
 flutter run
 # To target a specific device: flutter run -d <device-id>
 ```
 
-Use hot reload during development by saving files while the app is running.
-
-## Usage
-
-What the app does
-- The app starts at `OrderScreen` (`lib/main.dart`).
-- The UI shows an `OrderItemDisplay` summarizing the current order quantity and details.
-- Use the Add and Remove buttons to change quantity. Buttons automatically disable at limits (0 and max).
-- Type special requests into the notes `TextField` before pressing Add/Remove; the current note will appear in the item display.
-- Choose bread from the `DropdownMenu` (White / Wheat / Wholemeal).
-- Choose sandwich size via the size control (switch/segmented control).
-
-Main user flows
-1. Choose sandwich size (Six Inch / Footlong).
-2. Optional: choose bread type from the dropdown.
-3. Type special requests in the "Add a note" field (example: "no onions").
-4. Tap Add to increase the quantity (Add disables at configured max).
-5. Tap Remove to decrease the quantity (Remove disables at 0).
-
-### Running tests
-
-Run widget/unit tests with:
-
+Static analysis (recommended)
 ```powershell
-flutter test --reporter expanded
+flutter analyze
 ```
 
-If tests fail after UI changes, update the tests or the UI to match the intended behavior and re-run.
+## What the app contains
+- Entry point: `lib/main.dart` (contains `App`, `OrderScreen`, `OrderItemDisplay`, and UI wiring).
+- UI helpers: `lib/views/app_styles.dart` (typography/styles used in tests and UI).
+- Repositories: `lib/repositories/order_repository.dart` (quantity rules) and `lib/repositories/pricing_repository.dart` (pricing and totals).
+- Tests: widget and unit tests under `test/`.
 
-### Screenshots / GIFs
+Notes on tests and test keys
+- Several widgets expose `Key`s to make tests stable and unambiguous:
+	- `Key('notes_textfield')` for the notes `TextField`.
+	- `Key('size_switch')` for the sandwich size `Switch`.
+	- `Key('toast_switch')` for the toasted `Switch`.
+	- `Key('toast_status')` for the toast status `Text` shown in the `OrderItemDisplay`.
 
-Add screenshots to `assets/screenshots/` and embed them in this file, e.g.:
-
-```markdown
-![Order screen](assets/screenshots/order_screen.png)
+## Running tests
+Run the whole test suite:
+```powershell
+flutter test --reporter=expanded
 ```
 
-There are no screenshots included by default — add them for better documentation.
+Run a single test file (example):
+```powershell
+flutter test test/views/widget_test.dart --reporter=expanded
+```
 
-## Project structure & technologies used
+## Pricing
+- `PricingRepository` (in `lib/repositories/pricing_repository.dart`) contains the pricing logic used by tests and can be used by the UI:
+	- six-inch price: £7
+	- footlong price: £11
 
-High-level layout
-- `android/`, `ios/`, `linux/`, `macos/`, `windows/`, `web/` — platform folders generated by Flutter.
+It exposes helpers to compute the total in whole pounds and to format a total like `£21`.
+
+## Project layout (high-level)
 - `lib/` — app source
-	- `main.dart` — app entry and main UI widgets (`OrderScreen`, `OrderItemDisplay`, `StyledButton`).
-	- `views/` — view helpers and styles (e.g. `app_styles.dart`).
-	- `repositories/` — `order_repository.dart` (business logic and quantity rules).
-- `test/` — widget and unit tests (e.g. `test/views/widget_test.dart`).
-- `pubspec.yaml` — dependencies and assets.
+	- `main.dart` — app entry and primary widgets
+	- `views/` — styles and small view helpers
+	- `repositories/` — `order_repository.dart`, `pricing_repository.dart`
+- `test/` — unit and widget tests (e.g., `test/views/widget_test.dart`, `test/repositories/*_test.dart`)
+- platform folders: `android/`, `ios/`, `linux/`, `macos/`, `web/`, `windows/`
 
-Key files
-- `lib/main.dart` — primary UI, `OrderScreen` wiring, `OrderItemDisplay` view, `StyledButton` component.
-- `lib/repositories/order_repository.dart` — encapsulates quantity, maxQuantity and increment/decrement logic.
+## Known limitations
+- Single-order model: there's only one active order/quantity tracked by `OrderRepository`.
+- No persistence: orders are not saved to disk or synced to a backend.
+- Currency: prices are represented in whole pounds (int). If you need pence-level precision, represent values in pence.
 
-Dependencies
-- Flutter (Material)
-- `flutter_test` for tests
+## Next improvements you might consider
+- Display live total price in the UI using `PricingRepository` and the selected size + quantity.
+- Switch to an enum for sandwich sizes and centralize it in a small model file to avoid using raw booleans across the codebase.
+- Add a cart model to hold multiple different sandwich items.
 
-Development tools
-- Flutter CLI, Android Studio / VS Code (with Flutter plugin), and an emulator or device for testing.
-
-## Known issues & limitations
-
-Current limitations
-- Single-order model: `OrderRepository` tracks a single quantity; there's no cart/list of items.
-- Persistence: orders are not persisted locally or remotely.
-- Accessibility: basic widgets used — consider adding semantic labels, tooltips, and a11y improvements.
-- Tests: widget tests may need updates after UI refactors.
-
-Planned improvements
-- Add an `Order` model and a cart/list of items.
-- Persist orders locally (shared_preferences/SQLite) or integrate a backend API.
-- Add pricing, totals, and checkout flow.
-- Improve UI polish and accessibility.
-
-Contributing
-- Fork the repo → create a branch → make changes → open a PR.
-- Keep PRs focused and add tests where appropriate.
+## Contributing
+- Fork the repo → create a branch → implement changes → open a PR. Add tests for any new behavior.
 
 ## Contact
-
 - Repository owner: Jaketh444
 - GitHub: https://github.com/Jaketh444/sandwich_shop
-
-If you'd like, I can also add a simple placeholder screenshot and commit this README for you.
-
