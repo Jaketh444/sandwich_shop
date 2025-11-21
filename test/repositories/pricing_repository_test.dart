@@ -3,7 +3,7 @@ import 'package:sandwich_shop/repositories/pricing_repository.dart';
 
 void main() {
   group('PricingRepository', () {
-    final repo = const PricingRepository();
+    const repo = PricingRepository();
 
     test('price per sandwich for six-inch is £7', () {
       expect(repo.pricePerSandwich(isFootlong: false), 7);
