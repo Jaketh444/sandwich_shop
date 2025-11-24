@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
-import 'package:sandwich_shop/repositories/order_repository.dart';
-import 'package:sandwich_shop/repositories/pricing_repository.dart';
-
-enum BreadType { white, wheat, wholemeal }
+import 'package:sandwich_shop/models/sandwich.dart';
+import 'package:sandwich_shop/models/cart.dart';
 
 void main() {
   runApp(const App());
@@ -247,8 +245,45 @@ class OrderItemDisplay extends StatelessWidget {
     String displayText =
         '$quantity ${breadType.name} $itemType sandwich(es): ${'🥪' * quantity}';
 
+    Color sandwichColor;
+    switch (itemType.toLowerCase()) {
+      case 'veggie delight':
+        sandwichColor = Colors.green.shade400;
+        break;
+      case 'chicken teriyaki':
+        sandwichColor = Colors.orange.shade400;
+        break;
+      case 'tuna melt':
+        sandwichColor = Colors.blue.shade300;
+        break;
+      case 'meatball marinara':
+        sandwichColor = Colors.red.shade400;
+        break;
+      default:
+        sandwichColor = Colors.grey.shade400;
+    }
+
     return Column(
       children: [
+        Container(
+          width: 120,
+          height: 80,
+          decoration: BoxDecoration(
+            color: sandwichColor,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            itemType,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        const SizedBox(height: 8),
         Text(
           displayText,
           style: normalText,
