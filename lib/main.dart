@@ -208,12 +208,14 @@ class _OrderScreenState extends State<OrderScreen> {
 
   void _increaseQuantity() {
     setState(() {
-      _quantity++;
+      if (_quantity < widget.maxQuantity) {
+        _quantity++;
+      }
     });
   }
 
   void _decreaseQuantity() {
-    if (_quantity > 0) {
+    if (_quantity > 1) {
       setState(() {
         _quantity--;
       });
@@ -265,6 +267,7 @@ class _OrderScreenState extends State<OrderScreen> {
               ),
               const SizedBox(height: 20),
               DropdownMenu<SandwichType>(
+                key: const Key('sandwich_type_dropdown'),
                 width: double.infinity,
                 label: const Text('Sandwich Type'),
                 textStyle: normalText,
@@ -286,6 +289,7 @@ class _OrderScreenState extends State<OrderScreen> {
               ),
               const SizedBox(height: 20),
               DropdownMenu<BreadType>(
+                key: const Key('bread_type_dropdown'),
                 width: double.infinity,
                 label: const Text('Bread Type'),
                 textStyle: normalText,
@@ -299,11 +303,14 @@ class _OrderScreenState extends State<OrderScreen> {
                 children: [
                   const Text('Quantity: ', style: normalText),
                   IconButton(
+                    key: const Key('decrease_quantity_button'),
                     onPressed: _getDecreaseCallback(),
                     icon: const Icon(Icons.remove),
                   ),
-                  Text('$_quantity', style: heading2),
+                  Text('$_quantity',
+                      key: const Key('quantity_text'), style: heading2),
                   IconButton(
+                    key: const Key('increase_quantity_button'),
                     onPressed: _increaseQuantity,
                     icon: const Icon(Icons.add),
                   ),
@@ -311,6 +318,7 @@ class _OrderScreenState extends State<OrderScreen> {
               ),
               const SizedBox(height: 20),
               StyledButton(
+                key: const Key('add_to_cart_button'),
                 onPressed: _getAddToCartCallback(),
                 icon: Icons.add_shopping_cart,
                 label: 'Add to Cart',
@@ -318,6 +326,7 @@ class _OrderScreenState extends State<OrderScreen> {
               ),
               const SizedBox(height: 20),
               StyledButton(
+                key: const Key('view_cart_button'),
                 onPressed: () => _showCartModal(context),
                 icon: Icons.shopping_cart,
                 label: 'View Cart',
