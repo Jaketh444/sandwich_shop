@@ -31,6 +31,36 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
+  void _showCartModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext ctx) {
+        final cartItems = _cart.items;
+        if (cartItems.isEmpty) {
+          return const Padding(
+            padding: EdgeInsets.all(24.0),
+            child: Center(
+              child: Text('Your cart is empty.', style: normalText),
+            ),
+          );
+        }
+        return ListView.builder(
+          itemCount: cartItems.length,
+          itemBuilder: (context, index) {
+            final item = cartItems[index];
+            final sandwich = item.sandwich;
+            final sizeText = sandwich.isFootlong ? 'Footlong' : 'Six-inch';
+            return ListTile(
+              leading: Icon(Icons.fastfood),
+              title: Text('${item.quantity} x ${sandwich.name}'),
+              subtitle: Text('$sizeText on ${sandwich.breadType.name} bread'),
+            );
+          },
+        );
+      },
+    );
+  }
+
   final Cart _cart = Cart();
   final TextEditingController _notesController = TextEditingController();
 
@@ -173,6 +203,13 @@ class _OrderScreenState extends State<OrderScreen> {
           'Sandwich Counter',
           style: heading1,
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            tooltip: 'View Cart',
+            onPressed: () => _showCartModal(context),
+          ),
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -246,6 +283,13 @@ class _OrderScreenState extends State<OrderScreen> {
                 icon: Icons.add_shopping_cart,
                 label: 'Add to Cart',
                 backgroundColor: Colors.green,
+              ),
+              const SizedBox(height: 20),
+              StyledButton(
+                onPressed: () => _showCartModal(context),
+                icon: Icons.shopping_cart,
+                label: 'View Cart',
+                backgroundColor: Colors.blue,
               ),
               const SizedBox(height: 20),
             ],
