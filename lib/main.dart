@@ -36,6 +36,7 @@ class _OrderScreenState extends State<OrderScreen> {
       context: context,
       builder: (BuildContext ctx) {
         final cartItems = _cart.items;
+        final pricingRepo = _cart.pricingRepository;
         if (cartItems.isEmpty) {
           return const Padding(
             padding: EdgeInsets.all(24.0),
@@ -44,18 +45,46 @@ class _OrderScreenState extends State<OrderScreen> {
             ),
           );
         }
-        return ListView.builder(
-          itemCount: cartItems.length,
-          itemBuilder: (context, index) {
-            final item = cartItems[index];
-            final sandwich = item.sandwich;
-            final sizeText = sandwich.isFootlong ? 'Footlong' : 'Six-inch';
-            return ListTile(
-              leading: Icon(Icons.fastfood),
-              title: Text('${item.quantity} x ${sandwich.name}'),
-              subtitle: Text('$sizeText on ${sandwich.breadType.name} bread'),
-            );
-          },
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text('Your Cart', style: heading1),
+            ),
+            Flexible(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: cartItems.length,
+                itemBuilder: (context, index) {
+                  final item = cartItems[index];
+                  final sandwich = item.sandwich;
+                  final sizeText = sandwich.isFootlong ? 'Footlong' : 'Six-inch';
+                  final itemPrice = pricingRepo.calculatePrice(
+                    quantity: item.quantity,
+                    isFootlong: sandwich.isFootlong,
+                  );
+                  return ListTile(
+                    leading: Icon(Icons.fastfood),
+                    title: Text('${item.quantity} x ${sandwich.name}'),
+                    subtitle: Text('$sizeText on ${sandwich.breadType.name} bread'),
+                    trailing: Text('£${itemPrice.toStringAsFixed(2)}'),
+                  );
+                },
+              ),
+            ),
+            const Divider(),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Total:', style: heading2),
+                  Text('£${_cart.totalPrice.toStringAsFixed(2)}', style: heading2),
+                ],
+              ),
+            ),
+          ],
         );
       },
     );
