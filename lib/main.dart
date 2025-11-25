@@ -59,7 +59,8 @@ class _OrderScreenState extends State<OrderScreen> {
                 itemBuilder: (context, index) {
                   final item = cartItems[index];
                   final sandwich = item.sandwich;
-                  final sizeText = sandwich.isFootlong ? 'Footlong' : 'Six-inch';
+                  final sizeText =
+                      sandwich.isFootlong ? 'Footlong' : 'Six-inch';
                   final itemPrice = pricingRepo.calculatePrice(
                     quantity: item.quantity,
                     isFootlong: sandwich.isFootlong,
@@ -67,7 +68,8 @@ class _OrderScreenState extends State<OrderScreen> {
                   return ListTile(
                     leading: Icon(Icons.fastfood),
                     title: Text('${item.quantity} x ${sandwich.name}'),
-                    subtitle: Text('$sizeText on ${sandwich.breadType.name} bread'),
+                    subtitle:
+                        Text('$sizeText on ${sandwich.breadType.name} bread'),
                     trailing: Text('£${itemPrice.toStringAsFixed(2)}'),
                   );
                 },
@@ -80,7 +82,8 @@ class _OrderScreenState extends State<OrderScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Total:', style: heading2),
-                  Text('£${_cart.totalPrice.toStringAsFixed(2)}', style: heading2),
+                  Text('£${_cart.totalPrice.toStringAsFixed(2)}',
+                      style: heading2),
                 ],
               ),
             ),
