@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sandwich_shop/views/app_scaffold.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
 import 'package:sandwich_shop/views/cart_screen.dart';
 import 'package:sandwich_shop/models/cart.dart';
@@ -136,127 +137,140 @@ class _OrderScreenState extends State<OrderScreen> {
           style: heading1,
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Center(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(
-                      height: 300,
-                      child: Image.asset(
-                        _getCurrentImagePath(),
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Center(
-                            child: Text(
-                              'Image not found',
-                              style: normalText,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    DropdownMenu<SandwichType>(
-                      width: double.infinity,
-                      label: const Text('Sandwich Type'),
-                      textStyle: normalText,
-                      initialSelection: _selectedSandwichType,
-                      onSelected: (SandwichType? value) {
-                        if (value != null) {
-                          setState(() => _selectedSandwichType = value);
-                        }
-                      },
-                      dropdownMenuEntries: _buildSandwichTypeEntries(),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Six-inch', style: normalText),
-                        Switch(
-                          value: _isFootlong,
-                          onChanged: (value) =>
-                              setState(() => _isFootlong = value),
-                        ),
-                        const Text('Footlong', style: normalText),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    DropdownMenu<BreadType>(
-                      width: double.infinity,
-                      label: const Text('Bread Type'),
-                      textStyle: normalText,
-                      initialSelection: _selectedBreadType,
-                      onSelected: (BreadType? value) {
-                        if (value != null) {
-                          setState(() => _selectedBreadType = value);
-                        }
-                      },
-                      dropdownMenuEntries: _buildBreadTypeEntries(),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Quantity: ', style: normalText),
-                        IconButton(
-                          onPressed: _quantity > 0
-                              ? () => setState(() => _quantity--)
-                              : null,
-                          icon: const Icon(Icons.remove),
-                        ),
-                        Text('$_quantity', style: heading2),
-                        IconButton(
-                          onPressed: () => setState(() => _quantity++),
-                          icon: const Icon(Icons.add),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    StyledButton(
-                      onPressed: _getAddToCartCallback(),
-                      icon: Icons.add_shopping_cart,
-                      label: 'Add to Cart',
-                      backgroundColor: Colors.green,
-                    ),
-                    const SizedBox(height: 20),
-                    StyledButton(
-                      onPressed: _navigateToCartView,
-                      icon: Icons.shopping_cart,
-                      label: 'View Cart',
-                      backgroundColor: Colors.blue,
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'Cart: ${_cart.countOfItems} items - £${_cart.totalPrice.toStringAsFixed(2)}',
-                      style: normalText,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
+      body: AppScaffold(
+        currentRoute: '/orders',
+        appBar: AppBar(
+          title: const Text('Order'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.shopping_cart),
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ProfileScreen(),
-                  ),
+                      builder: (context) => CartScreen(cart: _cart)),
                 );
               },
-              child: const Text('Profile'),
             ),
-          ),
-        ],
+          ],
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(
+                        height: 300,
+                        child: Image.asset(
+                          _getCurrentImagePath(),
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center(
+                              child: Text(
+                                'Image not found',
+                                style: normalText,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      DropdownMenu<SandwichType>(
+                        width: double.infinity,
+                        label: const Text('Sandwich Type'),
+                        textStyle: normalText,
+                        initialSelection: _selectedSandwichType,
+                        onSelected: (SandwichType? value) {
+                          if (value != null) {
+                            setState(() => _selectedSandwichType = value);
+                          }
+                        },
+                        dropdownMenuEntries: _buildSandwichTypeEntries(),
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('Six-inch', style: normalText),
+                          Switch(
+                            value: _isFootlong,
+                            onChanged: (value) =>
+                                setState(() => _isFootlong = value),
+                          ),
+                          const Text('Footlong', style: normalText),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      DropdownMenu<BreadType>(
+                        width: double.infinity,
+                        label: const Text('Bread Type'),
+                        textStyle: normalText,
+                        initialSelection: _selectedBreadType,
+                        onSelected: (BreadType? value) {
+                          if (value != null) {
+                            setState(() => _selectedBreadType = value);
+                          }
+                        },
+                        dropdownMenuEntries: _buildBreadTypeEntries(),
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('Quantity: ', style: normalText),
+                          IconButton(
+                            onPressed: _quantity > 0
+                                ? () => setState(() => _quantity--)
+                                : null,
+                            icon: const Icon(Icons.remove),
+                          ),
+                          Text('$_quantity', style: heading2),
+                          IconButton(
+                            onPressed: () => setState(() => _quantity++),
+                            icon: const Icon(Icons.add),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      StyledButton(
+                        onPressed: _getAddToCartCallback(),
+                        icon: Icons.add_shopping_cart,
+                        label: 'Add to Cart',
+                        backgroundColor: Colors.green,
+                      ),
+                      const SizedBox(height: 20),
+                      StyledButton(
+                        onPressed: _navigateToCartView,
+                        icon: Icons.shopping_cart,
+                        label: 'View Cart',
+                        backgroundColor: Colors.blue,
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        'Cart: ${_cart.countOfItems} items - £${_cart.totalPrice.toStringAsFixed(2)}',
+                        style: normalText,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/profile');
+                },
+                child: const Text('Profile'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
