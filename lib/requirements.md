@@ -21,3 +21,34 @@
 5. **Code Organization**
    - Place the new screen in the appropriate `views` folder as `profile_screen.dart`.
    - Ensure navigation works from the `OrderScreen` to the `ProfileScreen`.
+
+
+   # Enhanced Navigation Requirements
+
+## 1. Global Drawer Navigation
+- Implement a Drawer menu accessible from all main screens.
+- The Drawer should open via a hamburger icon in the AppBar.
+
+## 2. Drawer Menu Content
+- Include navigation links for all major screens (e.g., Home, Profile, Orders, Settings).
+- Add a header section (e.g., app logo or user info).
+- Optionally, include a logout or settings option.
+
+## 3. Consistent Integration
+- Refactor screens to use a shared Scaffold widget that includes the Drawer and AppBar to reduce code duplication.
+
+## 4. Responsive Design
+- On wide screens (tablet/desktop), display navigation as a permanent sidebar or NavigationRail.
+- On narrow screens (mobile), use the Drawer.
+
+## 5. Navigation Functionality
+- Tapping a Drawer item navigates to the corresponding screen.
+- Highlight the current screen in the Drawer.
+
+## 6. Accessibility
+- Ensure Drawer is accessible via keyboard and screen readers.
+- Provide clear labels for navigation items.
+
+## 7. Testing
+- Add widget tests to verify Drawer presence, navigation, and responsiveness on different screen sizes.
+- Example: `test/views/profile_screen_test.dart` should check for Drawer integration and navigation links.
