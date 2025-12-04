@@ -117,5 +117,72 @@ void main() {
       expect(cart.getQuantity(sandwichA), 0);
       expect(cart.isEmpty, isTrue);
     });
+
+    // --- Cart Modification Feature Tests ---
+
+    test('increaseQuantity increases quantity by 1', () {
+      cart.add(sandwichA, quantity: 2);
+      cart.increaseQuantity(sandwichA);
+      expect(cart.getQuantity(sandwichA), 3);
+    });
+
+    test('decreaseQuantity decreases quantity by 1', () {
+      cart.add(sandwichA, quantity: 3);
+      cart.decreaseQuantity(sandwichA);
+      expect(cart.getQuantity(sandwichA), 2);
+    });
+
+    test('decreaseQuantity removes item if quantity reaches zero', () {
+      cart.add(sandwichA, quantity: 1);
+      cart.decreaseQuantity(sandwichA);
+      expect(cart.getQuantity(sandwichA), 0);
+      expect(cart.isEmpty, isTrue);
+    });
+
+    test('removeItem removes item completely and stores for undo', () {
+      cart.add(sandwichA, quantity: 2);
+      cart.removeItem(sandwichA);
+      expect(cart.getQuantity(sandwichA), 0);
+      expect(cart.isEmpty, isTrue);
+      // _lastRemovedSandwich and _lastRemovedQuantity should be set (not directly accessible)
+    });
+
+    test('restoreLastRemoved restores the last removed item', () {
+      cart.add(sandwichA, quantity: 2);
+      cart.removeItem(sandwichA);
+      cart.restoreLastRemoved();
+      expect(cart.getQuantity(sandwichA), 2);
+      expect(cart.isEmpty, isFalse);
+    });
+
+    test('restoreLastRemoved does nothing if nothing was removed', () {
+      cart.restoreLastRemoved();
+      expect(cart.isEmpty, isTrue);
+    });
+
+    test(
+        'removeItem then add new item, restoreLastRemoved restores correct state',
+        () {
+      cart.add(sandwichA, quantity: 2);
+      cart.removeItem(sandwichA);
+      cart.add(sandwichB, quantity: 1);
+      cart.restoreLastRemoved();
+      expect(cart.getQuantity(sandwichA), 2);
+      expect(cart.getQuantity(sandwichB), 1);
+      expect(cart.length, 2);
+    });
+
+    test(
+        'multiple removeItem and restoreLastRemoved only restores last removed',
+        () {
+      cart.add(sandwichA, quantity: 2);
+      cart.add(sandwichB, quantity: 3);
+      cart.removeItem(sandwichA);
+      cart.removeItem(sandwichB);
+      cart.restoreLastRemoved();
+      expect(cart.getQuantity(sandwichA), 0);
+      expect(cart.getQuantity(sandwichB), 3);
+      expect(cart.length, 1);
+    });
   });
 }
