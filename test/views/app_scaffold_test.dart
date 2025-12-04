@@ -4,8 +4,10 @@ import 'package:sandwich_shop/views/app_scaffold.dart';
 
 void main() {
   group('AppScaffold Navigation Bar', () {
-    testWidgets('Drawer is present and contains navigation links on mobile',
-        (WidgetTester tester) async {
+    testWidgets('shows Drawer with navigation links on mobile', (WidgetTester tester) async {
+      tester.binding.window.physicalSizeTestValue = const Size(400, 800);
+      tester.binding.window.devicePixelRatioTestValue = 1.0;
+
       await tester.pumpWidget(
         const MaterialApp(
           home: AppScaffold(
@@ -15,41 +17,42 @@ void main() {
         ),
       );
 
-      // Open the Drawer
-      final menuButton = find.byTooltip('Open navigation menu');
-      expect(menuButton, findsOneWidget);
-      await tester.tap(menuButton);
+      // Open Drawer
+      await tester.tap(find.byTooltip('Open navigation menu'));
       await tester.pumpAndSettle();
 
-      // Check for navigation links
-      expect(find.text('Home'), findsOneWidget);
-      expect(find.text('Profile'), findsOneWidget);
-      expect(find.text('Orders'), findsOneWidget);
-      expect(find.text('Settings'), findsOneWidget);
+      // Check navigation links
+      for (final label in ['Home', 'Profile', 'Orders', 'Settings']) {
+        expect(find.text(label), findsOneWidget);
+      }
+
+      // Clean up screen size
+      addTearDown(() {
+        tester.binding.window.clearPhysicalSizeTestValue();
+        tester.binding.window.clearDevicePixelRatioTestValue();
+      });
     });
 
-    testWidgets('NavigationRail is present on wide screens',
-        (WidgetTester tester) async {
+    testWidgets('shows NavigationRail with navigation links on wide screens', (WidgetTester tester) async {
       tester.binding.window.physicalSizeTestValue = const Size(1200, 800);
       tester.binding.window.devicePixelRatioTestValue = 1.0;
 
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: AppScaffold(
             currentRoute: '/orders',
-            body: const Text('Orders Body'),
+            body: Text('Orders Body'),
           ),
         ),
       );
 
-      // Check for NavigationRail
+      // Check NavigationRail and navigation links
       expect(find.byType(NavigationRail), findsOneWidget);
-      expect(find.text('Home'), findsOneWidget);
-      expect(find.text('Profile'), findsOneWidget);
-      expect(find.text('Orders'), findsOneWidget);
-      expect(find.text('Settings'), findsOneWidget);
+      for (final label in ['Home', 'Profile', 'Orders', 'Settings']) {
+        expect(find.text(label), findsOneWidget);
+      }
 
-      // Clean up
+      // Clean up screen size
       addTearDown(() {
         tester.binding.window.clearPhysicalSizeTestValue();
         tester.binding.window.clearDevicePixelRatioTestValue();
